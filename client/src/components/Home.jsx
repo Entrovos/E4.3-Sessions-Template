@@ -13,14 +13,14 @@ function Home({ heading }) {
 
 	//const logOut = async () => {};
 
-	useEffect(() => {
-		setHeader(isLoggedIn ? message : heading);
-	}, [heading, message, isLoggedIn]);
+	// useEffect(() => {
+	// 	setHeader(isLoggedIn ? message : heading);
+	// }, [heading, message, isLoggedIn]);
 
-	const handleLogin = () => {
-		login();
-		// Reset the input
-	};
+	// const handleLogin = () => {
+	// 	login();
+	// 	// Reset the input
+	// };
 
 	console.log(heading);
 	return (

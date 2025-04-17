@@ -1,6 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { database } from "./model";
 import { createSession, getSession, sessions } from "./session";
+import { Session } from "./session";
+// import { Session } from "inspector/promises";
 
 //for Filtering and Sorting
 // import { URL } from "url";
@@ -21,16 +23,18 @@ export const getHome = (req: IncomingMessage, res: ServerResponse) => {
 	 */
 
 	//For Part1 only get session
+	let currentSession: Session = getSession(req);
 
 	// Set response headers
 	res.statusCode = 200;
-	
+
 	//CORS (Cross-Origin Resource Sharing) Headers
 	res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); //  Allow all access to client app
 	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 	res.setHeader("Access-Control-Allow-Headers", "*"); //Allows all headers to be sent with cross-origin requests.
 	res.setHeader("Access-Control-Allow-Credentials", "true"); //included this get access to cookies on clientside
 	// For Part 1 only Set cookies
+	res.setHeader("Set-Cookie", [`id=${currentSession.id}`]);
 
 	// Send JSON response
 	res.end(JSON.stringify({ message: "Welcome Guest!" }, null, 2));
@@ -44,18 +48,16 @@ export const login = async (req: IncomingMessage, res: ServerResponse) => {
 	 * 4. Set the session data name to the user's name.
 	 * 5. Set the response status code to 200.
 	 * 6. Set the response header "Set-Cookie" to the session id.
-	 * 7. End the response. Update the message to include the username and send the session info 
+	 * 7. End the response. Update the message to include the username and send the session info
 	 */
 	console.log("/login");
 
-
 	// create session
-	
 
 	// Update session data
-	
-    //set header info
-	
+
+	//set header info
+
 	//CORS (Cross-Origin Resource Sharing) Headers
 	res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); //  Allow this port origins
 	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -63,17 +65,10 @@ export const login = async (req: IncomingMessage, res: ServerResponse) => {
 	res.setHeader("Access-Control-Allow-Headers", "*"); //Allows all headers to be sent with cross-origin requests.
 	res.setHeader("Access-Control-Allow-Credentials", "true"); //included this get access to cookies on clientside
 
-    //setCookie with the new session id
-	
+	//setCookie with the new session id
 
 	// Send response, send a Welcome with usenname message.
-	res.end(
-		JSON.stringify(
-			{ message: `Welcome  !` },
-			null,
-			2,
-		),
-	);
+	res.end(JSON.stringify({ message: `Welcome  !` }, null, 2));
 	//res.end();
 };
 
@@ -87,17 +82,14 @@ export const logout = async (req: IncomingMessage, res: ServerResponse) => {
 	 * 6. End the response.
 	 */
 
-	
-
 	res.statusCode = 200;
 	res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); //  Allow this port origins
 	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 	res.setHeader("Access-Control-Request-Method", "*");
 	res.setHeader("Access-Control-Allow-Headers", "*"); //Allows all headers to be sent with cross-origin requests.
 	res.setHeader("Access-Control-Allow-Credentials", "true"); //included this get access to cookies on clientside
-	
+
 	//setCookies,
-	
 
 	res.end();
 };
@@ -114,8 +106,6 @@ export const getAllPokemon = (req: IncomingMessage, res: ServerResponse) => {
 	 * 6. In ListView.hbs, only display the form to create a new pokemon if the user is logged in.
 	 */
 	console.log("Get /pokemons");
-
-	
 
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "application/json");
@@ -176,7 +166,6 @@ export const createPokemon = async (
 	 * Finally, grab the session and set the session cookie.
 	 */
 
-	
 	const body = await parseBody(req);
 	const newPokemon = {
 		id: database.length + 1, // ID "auto-increment".
@@ -187,7 +176,7 @@ export const createPokemon = async (
 	database.push(newPokemon);
 
 	res.statusCode = 200;
-	
+
 	res.end();
 };
 
